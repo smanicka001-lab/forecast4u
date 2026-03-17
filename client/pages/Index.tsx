@@ -175,7 +175,7 @@ export default function Index() {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-6">
                       {dayForecasts.map((item) => (
                         <Tile key={item.dt} className="p-4" style={{ backgroundColor: 'rgba(255, 255, 255, 1)' }}>
-                          <div className="space-y-2">
+                          <div className="space-y-2 border border-solid p-5">
                             <div className="flex items-center justify-between">
                               <span className="text-sm font-medium text-gray-600">
                                 {formatTime(item.dt_txt)}
