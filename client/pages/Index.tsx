@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { TextInput, Button, Loading, Tile } from "@carbon/react";
-import { Weather } from "@carbon/icons-react";
+import { Cloud } from "@carbon/icons-react";
 
 interface WeatherData {
   dt: number;
@@ -115,7 +115,7 @@ export default function Index() {
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-2">
-            <Weather size={40} className="text-blue-600" />
+            <Cloud size={40} className="text-blue-600" />
             <h1 className="text-4xl font-bold text-gray-900">Forecast4U</h1>
           </div>
           <p className="text-gray-600 text-lg">
@@ -226,7 +226,7 @@ export default function Index() {
         {/* Empty State */}
         {!forecast && !loading && !error && (
           <div className="bg-white rounded-lg shadow-sm p-12 text-center">
-            <Weather size={64} className="mx-auto mb-4 text-gray-400" />
+            <Cloud size={64} className="mx-auto mb-4 text-gray-400" />
             <h3 className="text-xl font-semibold text-gray-900 mb-2">
               Ready to check the weather?
             </h3>
