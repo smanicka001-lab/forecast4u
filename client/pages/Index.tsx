@@ -51,6 +51,7 @@ export default function Index() {
   const [forecast, setForecast] = useState<ForecastResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [darkMode, setDarkMode] = useState(() => {
     const saved = localStorage.getItem("darkMode");
     return saved ? JSON.parse(saved) : false;
@@ -114,6 +115,7 @@ export default function Index() {
       console.log('Current time:', new Date().toISOString());
       console.log('Location data with state:', locationData);
       setForecast(data);
+      setLastUpdated(new Date());
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
     } finally {
@@ -233,10 +235,27 @@ export default function Index() {
         {forecast && !loading && (
           <div>
             <div className="mb-6">
-              <h2 className={`text-2xl font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                {forecast.city.name}, {forecast.city.state || forecast.city.country}
-              </h2>
-              <p className={darkMode ? 'text-gray-300' : 'text-gray-600'}>5-Day Forecast (Times in EDT)</p>
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className={`text-2xl font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                    {forecast.city.name}, {forecast.city.state || forecast.city.country}
+                  </h2>
+                  <p className={darkMode ? 'text-gray-300' : 'text-gray-600'}>5-Day Forecast (Times in EDT)</p>
+                  {lastUpdated && (
+                    <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                      Last updated: {lastUpdated.toLocaleTimeString("en-US", {
+                        hour: "numeric",
+                        minute: "2-digit",
+                        hour12: true,
+                        timeZone: "America/New_York",
+                      })}
+                    </p>
+                  )}
+                </div>
+                <Button onClick={fetchWeatherForecast} disabled={loading} size="sm">
+                  Refresh
+                </Button>
+              </div>
             </div>
 
             <div className="space-y-6">
