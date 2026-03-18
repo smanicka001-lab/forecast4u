@@ -182,7 +182,7 @@ export default function Index() {
                           </span>
                           <Tile className="p-0 w-full" style={{ backgroundColor: 'rgba(255, 255, 255, 1)', padding: '0' }}>
                             <div className="space-y-2 border border-solid p-2 min-w-0">
-                              <div className="flex items-center justify-between mb-2 gap-1">
+                              <div className="flex items-center justify-between mb-2">
                                 <div className="text-xl font-bold text-gray-900 shrink-0">
                                   {Math.round(item.main.temp)}°F
                                 </div>
@@ -196,19 +196,19 @@ export default function Index() {
                                 {item.weather[0].description}
                               </div>
                               <div className="pt-2 border-t border-gray-200 space-y-1 text-xs text-gray-600">
-                                <div className="flex justify-between gap-2">
+                                <div className="flex justify-between gap-1">
                                   <span>Feels Like:</span>
                                   <span className="font-medium shrink-0">
                                     {Math.round(item.main.feels_like)}°F
                                   </span>
                                 </div>
-                                <div className="flex justify-between gap-2">
+                                <div className="flex justify-between gap-1">
                                   <span>Humidity:</span>
                                   <span className="font-medium shrink-0">
                                     {item.main.humidity}%
                                   </span>
                                 </div>
-                                <div className="flex justify-between gap-2">
+                                <div className="flex justify-between gap-1">
                                   <span>Wind:</span>
                                   <span className="font-medium shrink-0">
                                     {Math.round(item.wind.speed)} mph
