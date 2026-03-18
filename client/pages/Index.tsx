@@ -73,20 +73,32 @@ export default function Index() {
     try {
       const apiKey = import.meta.env.VITE_OPENWEATHER_API_KEY;
 
-      // First, get the location details including state from geocoding API
-      const geoResponse = await fetch(
+      // First, get the coordinates from zip code
+      const zipResponse = await fetch(
         `https://api.openweathermap.org/geo/1.0/zip?zip=${zipCode},US&appid=${apiKey}`
       );
 
-      if (!geoResponse.ok) {
+      if (!zipResponse.ok) {
         throw new Error("Failed to fetch location data. Please check the zip code.");
       }
 
-      const geoData: GeocodingResponse = await geoResponse.json();
+      const zipData = await zipResponse.json();
 
-      // Then get the forecast using coordinates
+      // Use reverse geocoding to get detailed location info including state
+      const reverseGeoResponse = await fetch(
+        `https://api.openweathermap.org/geo/1.0/reverse?lat=${zipData.lat}&lon=${zipData.lon}&limit=1&appid=${apiKey}`
+      );
+
+      if (!reverseGeoResponse.ok) {
+        throw new Error("Failed to fetch detailed location data.");
+      }
+
+      const reverseGeoData: GeocodingResponse[] = await reverseGeoResponse.json();
+      const locationData = reverseGeoData[0];
+
+      // Get the forecast using coordinates
       const forecastResponse = await fetch(
-        `https://api.openweathermap.org/data/2.5/forecast?lat=${geoData.lat}&lon=${geoData.lon}&appid=${apiKey}&units=imperial`
+        `https://api.openweathermap.org/data/2.5/forecast?lat=${zipData.lat}&lon=${zipData.lon}&appid=${apiKey}&units=imperial`
       );
 
       if (!forecastResponse.ok) {
@@ -96,11 +108,11 @@ export default function Index() {
       const data: ForecastResponse = await forecastResponse.json();
 
       // Add state information to the forecast data
-      data.city.state = geoData.state;
+      data.city.state = locationData.state;
 
       console.log('First forecast time:', data.list[0]?.dt_txt);
       console.log('Current time:', new Date().toISOString());
-      console.log('Location data:', geoData);
+      console.log('Location data with state:', locationData);
       setForecast(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
