@@ -34,7 +34,16 @@ interface ForecastResponse {
   city: {
     name: string;
     country: string;
+    state?: string;
   };
+}
+
+interface GeocodingResponse {
+  name: string;
+  lat: number;
+  lon: number;
+  country: string;
+  state?: string;
 }
 
 export default function Index() {
@@ -63,17 +72,35 @@ export default function Index() {
 
     try {
       const apiKey = import.meta.env.VITE_OPENWEATHER_API_KEY;
-      const response = await fetch(
-        `https://api.openweathermap.org/data/2.5/forecast?zip=${zipCode},us&appid=${apiKey}&units=imperial`
+
+      // First, get the location details including state from geocoding API
+      const geoResponse = await fetch(
+        `https://api.openweathermap.org/geo/1.0/zip?zip=${zipCode},US&appid=${apiKey}`
       );
 
-      if (!response.ok) {
-        throw new Error("Failed to fetch weather data. Please check the zip code.");
+      if (!geoResponse.ok) {
+        throw new Error("Failed to fetch location data. Please check the zip code.");
       }
 
-      const data: ForecastResponse = await response.json();
+      const geoData: GeocodingResponse = await geoResponse.json();
+
+      // Then get the forecast using coordinates
+      const forecastResponse = await fetch(
+        `https://api.openweathermap.org/data/2.5/forecast?lat=${geoData.lat}&lon=${geoData.lon}&appid=${apiKey}&units=imperial`
+      );
+
+      if (!forecastResponse.ok) {
+        throw new Error("Failed to fetch weather data.");
+      }
+
+      const data: ForecastResponse = await forecastResponse.json();
+
+      // Add state information to the forecast data
+      data.city.state = geoData.state;
+
       console.log('First forecast time:', data.list[0]?.dt_txt);
       console.log('Current time:', new Date().toISOString());
+      console.log('Location data:', geoData);
       setForecast(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
@@ -182,7 +209,7 @@ export default function Index() {
           <div>
             <div className="mb-6">
               <h2 className={`text-2xl font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                {forecast.city.name}, {forecast.city.country}
+                {forecast.city.name}, {forecast.city.state || forecast.city.country}
               </h2>
               <p className={darkMode ? 'text-gray-300' : 'text-gray-600'}>5-Day Forecast</p>
             </div>
