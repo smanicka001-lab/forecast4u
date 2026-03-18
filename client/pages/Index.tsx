@@ -181,16 +181,14 @@ export default function Index() {
                             {formatTime(item.dt_txt)}
                           </span>
                           <Tile className="p-0 w-full" style={{ backgroundColor: 'rgba(255, 255, 255, 1)', padding: '0' }}>
-                            <div className="space-y-2 border border-solid p-2 min-w-0">
-                              <div className="flex items-center justify-start gap-3 mb-2">
-                                <div className="text-base font-bold text-gray-900 shrink-0">
-                                  {Math.round(item.main.temp)}°F
-                                </div>
-                                <img
-                                  src={`https://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png`}
-                                  alt={item.weather[0].description}
-                                  className="w-10 h-10 shrink-0"
-                                />
+                            <div className="space-y-2 border border-solid p-2 min-w-0 relative">
+                              <img
+                                src={`https://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png`}
+                                alt={item.weather[0].description}
+                                className="w-10 h-10 absolute top-2 right-2"
+                              />
+                              <div className="text-base font-bold text-gray-900 mb-2">
+                                {Math.round(item.main.temp)}°F
                               </div>
                               <div className="text-xs text-gray-600 capitalize leading-tight">
                                 {item.weather[0].description}
