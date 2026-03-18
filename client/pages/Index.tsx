@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { TextInput, Button, Loading, Tile } from "@carbon/react";
-import { Cloud } from "@carbon/icons-react";
+import { useState, useEffect } from "react";
+import { TextInput, Button, Loading, Tile, Toggle } from "@carbon/react";
+import { Cloud, Asleep, Light } from "@carbon/icons-react";
 
 interface WeatherData {
   dt: number;
@@ -42,6 +42,14 @@ export default function Index() {
   const [forecast, setForecast] = useState<ForecastResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [darkMode, setDarkMode] = useState(() => {
+    const saved = localStorage.getItem("darkMode");
+    return saved ? JSON.parse(saved) : false;
+  });
+
+  useEffect(() => {
+    localStorage.setItem("darkMode", JSON.stringify(darkMode));
+  }, [darkMode]);
 
   const fetchWeatherForecast = async () => {
     if (!zipCode || zipCode.length !== 5 || !/^\d{5}$/.test(zipCode)) {
@@ -112,21 +120,35 @@ export default function Index() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className={`min-h-screen ${darkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
-          <div className="flex items-center gap-3 mb-2">
-            <Cloud size={40} className="text-blue-600" />
-            <h1 className="text-4xl font-bold text-gray-900">Forecast4U</h1>
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-3">
+              <Cloud size={40} className="text-blue-600" />
+              <h1 className={`text-4xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>Forecast4U</h1>
+            </div>
+            <button
+              onClick={() => setDarkMode(!darkMode)}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
+                darkMode
+                  ? 'bg-gray-800 text-yellow-400 hover:bg-gray-700'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+              aria-label="Toggle dark mode"
+            >
+              {darkMode ? <Light size={20} /> : <Asleep size={20} />}
+              <span className="text-sm font-medium">{darkMode ? 'Light' : 'Dark'}</span>
+            </button>
           </div>
-          <p className="text-gray-600 text-lg">
+          <p className={`${darkMode ? 'text-gray-300' : 'text-gray-600'} text-lg`}>
             Get your 5-day weather forecast in 3-hour increments
           </p>
         </div>
 
         {/* Search Form */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
+        <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-lg shadow-sm p-6 mb-8`}>
           <form onSubmit={handleSubmit} className="flex gap-4 items-end">
             <div className="flex-1 max-w-md">
               <TextInput
@@ -159,17 +181,17 @@ export default function Index() {
         {forecast && !loading && (
           <div>
             <div className="mb-6">
-              <h2 className="text-2xl font-semibold text-gray-900">
+              <h2 className={`text-2xl font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
                 {forecast.city.name}, {forecast.city.country}
               </h2>
-              <p className="text-gray-600">5-Day Forecast</p>
+              <p className={darkMode ? 'text-gray-300' : 'text-gray-600'}>5-Day Forecast</p>
             </div>
 
             <div className="space-y-6">
               {Object.entries(groupByDay(forecast.list)).map(
                 ([date, dayForecasts]) => (
-                  <div key={date} className="bg-white rounded-lg shadow-sm overflow-hidden">
-                    <div className="bg-blue-600 text-white px-6 py-3">
+                  <div key={date} className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-lg shadow-sm overflow-hidden`}>
+                    <div className={`${darkMode ? 'bg-blue-700' : 'bg-blue-600'} text-white px-6 py-3`}>
                       <h3 className="text-xl font-semibold">
                         {formatDate(dayForecasts[0].dt_txt)}
                       </h3>
@@ -177,23 +199,23 @@ export default function Index() {
                     <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 gap-2 p-6">
                       {dayForecasts.map((item) => (
                         <div key={item.dt} className="flex flex-col items-center">
-                          <span className="text-xs font-medium text-gray-600 mb-1">
+                          <span className={`text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-600'} mb-1`}>
                             {formatTime(item.dt_txt)}
                           </span>
-                          <Tile className="p-0 w-full" style={{ backgroundColor: 'rgba(255, 255, 255, 1)', padding: '0' }}>
-                            <div className="space-y-2 border border-solid p-2 min-w-0 relative">
+                          <Tile className="p-0 w-full" style={{ backgroundColor: darkMode ? 'rgb(55, 65, 81)' : 'rgba(255, 255, 255, 1)', padding: '0' }}>
+                            <div className={`space-y-2 border ${darkMode ? 'border-gray-600' : 'border-solid'} p-2 min-w-0 relative`}>
                               <img
                                 src={`https://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png`}
                                 alt={item.weather[0].description}
                                 className="w-10 h-10 absolute top-2 right-2"
                               />
-                              <div className="text-base font-bold text-gray-900 mb-2">
+                              <div className={`text-base font-bold ${darkMode ? 'text-white' : 'text-gray-900'} mb-2`}>
                                 {Math.round(item.main.temp)}°F
                               </div>
-                              <div className="text-xs text-gray-600 capitalize leading-tight">
+                              <div className={`text-xs ${darkMode ? 'text-gray-300' : 'text-gray-600'} capitalize leading-tight`}>
                                 {item.weather[0].description}
                               </div>
-                              <div className="pt-2 border-t border-gray-200 space-y-1 text-xs text-gray-600">
+                              <div className={`pt-2 border-t ${darkMode ? 'border-gray-600' : 'border-gray-200'} space-y-1 text-xs ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                                 <div className="flex justify-between gap-1">
                                   <span>Feels Like:</span>
                                   <span className="font-medium shrink-0">
@@ -227,12 +249,12 @@ export default function Index() {
 
         {/* Empty State */}
         {!forecast && !loading && !error && (
-          <div className="bg-white rounded-lg shadow-sm p-12 text-center">
-            <Cloud size={64} className="mx-auto mb-4 text-gray-400" />
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+          <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-lg shadow-sm p-12 text-center`}>
+            <Cloud size={64} className={`mx-auto mb-4 ${darkMode ? 'text-gray-500' : 'text-gray-400'}`} />
+            <h3 className={`text-xl font-semibold ${darkMode ? 'text-white' : 'text-gray-900'} mb-2`}>
               Ready to check the weather?
             </h3>
-            <p className="text-gray-600">
+            <p className={darkMode ? 'text-gray-300' : 'text-gray-600'}>
               Enter a ZIP code above to get started with your 5-day forecast.
             </p>
           </div>
