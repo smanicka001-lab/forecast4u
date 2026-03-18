@@ -182,8 +182,8 @@ export default function Index() {
                           </span>
                           <Tile className="p-0 w-full" style={{ backgroundColor: 'rgba(255, 255, 255, 1)', padding: '0' }}>
                             <div className="space-y-2 border border-solid p-2 min-w-0">
-                              <div className="flex items-center gap-1 mb-2">
-                                <div className="text-xl font-bold text-gray-900 shrink-0">
+                              <div className="flex items-center justify-start gap-3 mb-2">
+                                <div className="text-base font-bold text-gray-900 shrink-0">
                                   {Math.round(item.main.temp)}°F
                                 </div>
                                 <img
