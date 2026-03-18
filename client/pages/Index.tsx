@@ -181,7 +181,7 @@ export default function Index() {
                             {formatTime(item.dt_txt)}
                           </span>
                           <Tile className="p-2 w-full" style={{ backgroundColor: 'rgba(255, 255, 255, 1)' }}>
-                            <div className="space-y-2 border border-solid p-3 min-w-0">
+                            <div className="space-y-2 border border-solid p-2 min-w-0">
                               <div className="flex items-center justify-between mb-2 gap-1">
                                 <div className="text-xl font-bold text-gray-900 shrink-0">
                                   {Math.round(item.main.temp)}°F
