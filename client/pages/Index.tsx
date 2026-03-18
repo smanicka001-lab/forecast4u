@@ -174,7 +174,7 @@ export default function Index() {
                         {formatDate(dayForecasts[0].dt_txt)}
                       </h3>
                     </div>
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-2 p-6">
+                    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 gap-2 p-6">
                       {dayForecasts.map((item) => (
                         <div key={item.dt} className="flex flex-col items-center">
                           <span className="text-xs font-medium text-gray-600 mb-1">
