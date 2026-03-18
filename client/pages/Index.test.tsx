@@ -213,7 +213,7 @@ describe("Index Component", () => {
         expect(screen.getByText("Beverly Hills, California")).toBeInTheDocument();
       });
 
-      expect(screen.getByText("5-Day Forecast")).toBeInTheDocument();
+      expect(screen.getByText("5-Day Forecast (Times in EDT)")).toBeInTheDocument();
       expect(screen.getByText("75°F")).toBeInTheDocument();
       expect(screen.getByText("clear sky")).toBeInTheDocument();
     });
@@ -287,6 +287,261 @@ describe("Index Component", () => {
         expect(mockFetch).toHaveBeenCalledWith(
           expect.stringContaining("geo/1.0/zip?zip=10001,US")
         );
+      });
+    });
+  });
+
+  describe("Refresh Functionality", () => {
+    it("should display refresh button after forecast is loaded", async () => {
+      const mockGeoResponse = {
+        zip: "90210",
+        name: "Beverly Hills",
+        lat: 34.0901,
+        lon: -118.4065,
+        country: "US",
+      };
+
+      const mockReverseGeoResponse = [
+        {
+          name: "Beverly Hills",
+          lat: 34.0901,
+          lon: -118.4065,
+          country: "US",
+          state: "California",
+        },
+      ];
+
+      const mockForecastResponse = {
+        list: [
+          {
+            dt: 1234567890,
+            dt_txt: "2024-01-01 12:00:00",
+            main: {
+              temp: 75,
+              feels_like: 73,
+              humidity: 50,
+              temp_min: 70,
+              temp_max: 80,
+              pressure: 1013,
+            },
+            weather: [
+              {
+                id: 800,
+                main: "Clear",
+                description: "clear sky",
+                icon: "01d",
+              },
+            ],
+            clouds: { all: 0 },
+            wind: { speed: 5, deg: 180 },
+            pop: 0,
+          },
+        ],
+        city: {
+          name: "Beverly Hills",
+          country: "US",
+        },
+      };
+
+      mockFetch
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => mockGeoResponse,
+        })
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => mockReverseGeoResponse,
+        })
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => mockForecastResponse,
+        });
+
+      render(<Index />);
+      const input = screen.getByLabelText("Enter ZIP Code");
+      const submitButton = screen.getByRole("button", { name: /get forecast/i });
+
+      await userEvent.type(input, "90210");
+      await userEvent.click(submitButton);
+
+      await waitFor(() => {
+        expect(screen.getByText("Beverly Hills, California")).toBeInTheDocument();
+      });
+
+      expect(screen.getByRole("button", { name: /refresh/i })).toBeInTheDocument();
+    });
+
+    it("should display last updated timestamp after forecast is loaded", async () => {
+      const mockGeoResponse = {
+        zip: "90210",
+        name: "Beverly Hills",
+        lat: 34.0901,
+        lon: -118.4065,
+        country: "US",
+      };
+
+      const mockReverseGeoResponse = [
+        {
+          name: "Beverly Hills",
+          lat: 34.0901,
+          lon: -118.4065,
+          country: "US",
+          state: "California",
+        },
+      ];
+
+      const mockForecastResponse = {
+        list: [
+          {
+            dt: 1234567890,
+            dt_txt: "2024-01-01 12:00:00",
+            main: {
+              temp: 75,
+              feels_like: 73,
+              humidity: 50,
+              temp_min: 70,
+              temp_max: 80,
+              pressure: 1013,
+            },
+            weather: [
+              {
+                id: 800,
+                main: "Clear",
+                description: "clear sky",
+                icon: "01d",
+              },
+            ],
+            clouds: { all: 0 },
+            wind: { speed: 5, deg: 180 },
+            pop: 0,
+          },
+        ],
+        city: {
+          name: "Beverly Hills",
+          country: "US",
+        },
+      };
+
+      mockFetch
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => mockGeoResponse,
+        })
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => mockReverseGeoResponse,
+        })
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => mockForecastResponse,
+        });
+
+      render(<Index />);
+      const input = screen.getByLabelText("Enter ZIP Code");
+      const submitButton = screen.getByRole("button", { name: /get forecast/i });
+
+      await userEvent.type(input, "90210");
+      await userEvent.click(submitButton);
+
+      await waitFor(() => {
+        expect(screen.getByText(/Last updated:/)).toBeInTheDocument();
+      });
+    });
+
+    it("should refetch data when refresh button is clicked", async () => {
+      const mockGeoResponse = {
+        zip: "90210",
+        name: "Beverly Hills",
+        lat: 34.0901,
+        lon: -118.4065,
+        country: "US",
+      };
+
+      const mockReverseGeoResponse = [
+        {
+          name: "Beverly Hills",
+          lat: 34.0901,
+          lon: -118.4065,
+          country: "US",
+          state: "California",
+        },
+      ];
+
+      const mockForecastResponse = {
+        list: [
+          {
+            dt: 1234567890,
+            dt_txt: "2024-01-01 12:00:00",
+            main: {
+              temp: 75,
+              feels_like: 73,
+              humidity: 50,
+              temp_min: 70,
+              temp_max: 80,
+              pressure: 1013,
+            },
+            weather: [
+              {
+                id: 800,
+                main: "Clear",
+                description: "clear sky",
+                icon: "01d",
+              },
+            ],
+            clouds: { all: 0 },
+            wind: { speed: 5, deg: 180 },
+            pop: 0,
+          },
+        ],
+        city: {
+          name: "Beverly Hills",
+          country: "US",
+        },
+      };
+
+      mockFetch
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => mockGeoResponse,
+        })
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => mockReverseGeoResponse,
+        })
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => mockForecastResponse,
+        })
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => mockGeoResponse,
+        })
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => mockReverseGeoResponse,
+        })
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => mockForecastResponse,
+        });
+
+      render(<Index />);
+      const input = screen.getByLabelText("Enter ZIP Code");
+      const submitButton = screen.getByRole("button", { name: /get forecast/i });
+
+      await userEvent.type(input, "90210");
+      await userEvent.click(submitButton);
+
+      await waitFor(() => {
+        expect(screen.getByText("Beverly Hills, California")).toBeInTheDocument();
+      });
+
+      const refreshButton = screen.getByRole("button", { name: /refresh/i });
+      await userEvent.click(refreshButton);
+
+      // Verify that fetch was called again (6 total: 3 initial + 3 refresh)
+      await waitFor(() => {
+        expect(mockFetch).toHaveBeenCalledTimes(6);
       });
     });
   });
