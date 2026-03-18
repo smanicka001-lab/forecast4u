@@ -197,13 +197,13 @@ export default function Index() {
                               </div>
                               <div className="pt-2 border-t border-gray-200 space-y-1 text-xs text-gray-600">
                                 <div className="flex justify-between gap-2">
-                                  <span>Feels:</span>
+                                  <span>Feels Like:</span>
                                   <span className="font-medium shrink-0">
                                     {Math.round(item.main.feels_like)}°F
                                   </span>
                                 </div>
                                 <div className="flex justify-between gap-2">
-                                  <span>Humid:</span>
+                                  <span>Humidity:</span>
                                   <span className="font-medium shrink-0">
                                     {item.main.humidity}%
                                   </span>
