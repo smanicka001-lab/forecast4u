@@ -114,6 +114,18 @@ export default function Index() {
       console.log('First forecast time:', data.list[0]?.dt_txt);
       console.log('Current time:', new Date().toISOString());
       console.log('Location data with state:', locationData);
+
+      // Log all forecast times in EDT for debugging
+      console.log('All forecast times in EDT:');
+      data.list.slice(0, 10).forEach((item, idx) => {
+        const edtTime = new Date(item.dt_txt).toLocaleString("en-US", {
+          timeZone: "America/New_York",
+          dateStyle: "short",
+          timeStyle: "short"
+        });
+        console.log(`  ${idx}: ${item.dt_txt} UTC → ${edtTime} EDT`);
+      });
+
       setForecast(data);
       setLastUpdated(new Date());
     } catch (err) {
