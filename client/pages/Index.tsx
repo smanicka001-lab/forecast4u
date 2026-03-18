@@ -64,6 +64,8 @@ export default function Index() {
       }
 
       const data: ForecastResponse = await response.json();
+      console.log('First forecast time:', data.list[0]?.dt_txt);
+      console.log('Current time:', new Date().toISOString());
       setForecast(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
