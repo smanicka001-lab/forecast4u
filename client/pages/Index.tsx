@@ -176,48 +176,48 @@ export default function Index() {
                     </div>
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-2 p-6">
                       {dayForecasts.map((item) => (
-                        <Tile key={item.dt} className="p-2" style={{ backgroundColor: 'rgba(255, 255, 255, 1)' }}>
-                          <div className="space-y-2 border border-solid p-3 min-w-0">
-                            <div className="flex items-center justify-between mb-2 gap-1">
-                              <span className="text-xs font-medium text-gray-600 shrink-0">
-                                {formatTime(item.dt_txt)}
-                              </span>
-                              <img
-                                src={`https://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png`}
-                                alt={item.weather[0].description}
-                                className="w-10 h-10 shrink-0"
-                              />
-                            </div>
-                            <div className="flex items-baseline gap-2">
-                              <div className="text-xl font-bold text-gray-900 shrink-0">
-                                {Math.round(item.main.temp)}°F
+                        <div key={item.dt} className="flex flex-col items-center">
+                          <span className="text-xs font-medium text-gray-600 mb-1">
+                            {formatTime(item.dt_txt)}
+                          </span>
+                          <Tile className="p-2 w-full" style={{ backgroundColor: 'rgba(255, 255, 255, 1)' }}>
+                            <div className="space-y-2 border border-solid p-3 min-w-0">
+                              <div className="flex items-center justify-between mb-2 gap-1">
+                                <div className="text-xl font-bold text-gray-900 shrink-0">
+                                  {Math.round(item.main.temp)}°F
+                                </div>
+                                <img
+                                  src={`https://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png`}
+                                  alt={item.weather[0].description}
+                                  className="w-10 h-10 shrink-0"
+                                />
                               </div>
-                              <div className="text-xs text-gray-600 capitalize leading-tight flex-1 min-w-0 break-words">
+                              <div className="text-xs text-gray-600 capitalize leading-tight">
                                 {item.weather[0].description}
                               </div>
+                              <div className="pt-2 border-t border-gray-200 space-y-1 text-xs text-gray-600">
+                                <div className="flex justify-between gap-2">
+                                  <span>Feels:</span>
+                                  <span className="font-medium shrink-0">
+                                    {Math.round(item.main.feels_like)}°F
+                                  </span>
+                                </div>
+                                <div className="flex justify-between gap-2">
+                                  <span>Humid:</span>
+                                  <span className="font-medium shrink-0">
+                                    {item.main.humidity}%
+                                  </span>
+                                </div>
+                                <div className="flex justify-between gap-2">
+                                  <span>Wind:</span>
+                                  <span className="font-medium shrink-0">
+                                    {Math.round(item.wind.speed)} mph
+                                  </span>
+                                </div>
+                              </div>
                             </div>
-                            <div className="pt-2 border-t border-gray-200 space-y-1 text-xs text-gray-600">
-                              <div className="flex justify-between gap-2">
-                                <span>Feels:</span>
-                                <span className="font-medium shrink-0">
-                                  {Math.round(item.main.feels_like)}°F
-                                </span>
-                              </div>
-                              <div className="flex justify-between gap-2">
-                                <span>Humid:</span>
-                                <span className="font-medium shrink-0">
-                                  {item.main.humidity}%
-                                </span>
-                              </div>
-                              <div className="flex justify-between gap-2">
-                                <span>Wind:</span>
-                                <span className="font-medium shrink-0">
-                                  {Math.round(item.wind.speed)} mph
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-                        </Tile>
+                          </Tile>
+                        </div>
                       ))}
                     </div>
                   </div>
