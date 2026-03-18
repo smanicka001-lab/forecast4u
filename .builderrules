@@ -1,0 +1,9 @@
+# Testing rules
+
+- For every new feature or behavior change, create or update unit tests automatically.
+- Do not finish a code change unless relevant unit tests are added or updated.
+- Use Vitest, jsdom, and React Testing Library for unit tests.
+- Create a test file next to the component/utility: `MyComponent.test.tsx`.
+- After modifying code, run `pnpm test` and fix any failing tests.
+- Prefer small focused tests over broad integration-style tests.
+- When changing UI text or interactions, update existing tests instead of deleting coverage.
