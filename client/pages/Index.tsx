@@ -132,6 +132,7 @@ export default function Index() {
       weekday: "short",
       month: "short",
       day: "numeric",
+      timeZone: "America/New_York",
     });
   };
 
@@ -141,18 +142,30 @@ export default function Index() {
       hour: "numeric",
       minute: "2-digit",
       hour12: true,
+      timeZone: "America/New_York",
     });
   };
 
   const groupByDay = (forecasts: WeatherData[]) => {
     const grouped: { [key: string]: WeatherData[] } = {};
-    
+
     forecasts.forEach((forecast) => {
-      const date = forecast.dt_txt.split(" ")[0];
-      if (!grouped[date]) {
-        grouped[date] = [];
+      // Convert to EDT timezone for grouping
+      const date = new Date(forecast.dt_txt);
+      const edtDate = date.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        timeZone: "America/New_York",
+      });
+      // Convert MM/DD/YYYY to YYYY-MM-DD for consistent sorting
+      const [month, day, year] = edtDate.split('/');
+      const dateKey = `${year}-${month}-${day}`;
+
+      if (!grouped[dateKey]) {
+        grouped[dateKey] = [];
       }
-      grouped[date].push(forecast);
+      grouped[dateKey].push(forecast);
     });
 
     return grouped;
@@ -223,7 +236,7 @@ export default function Index() {
               <h2 className={`text-2xl font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
                 {forecast.city.name}, {forecast.city.state || forecast.city.country}
               </h2>
-              <p className={darkMode ? 'text-gray-300' : 'text-gray-600'}>5-Day Forecast</p>
+              <p className={darkMode ? 'text-gray-300' : 'text-gray-600'}>5-Day Forecast (Times in EDT)</p>
             </div>
 
             <div className="space-y-6">
