@@ -174,35 +174,37 @@ export default function Index() {
                         {formatDate(dayForecasts[0].dt_txt)}
                       </h3>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-6">
+                    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4 p-6">
                       {dayForecasts.map((item) => (
-                        <Tile key={item.dt} className="p-4" style={{ backgroundColor: 'rgba(255, 255, 255, 1)' }}>
-                          <div className="space-y-2 border border-solid p-5">
-                            <div className="flex items-center justify-between">
-                              <span className="text-sm font-medium text-gray-600">
+                        <Tile key={item.dt} className="p-2" style={{ backgroundColor: 'rgba(255, 255, 255, 1)' }}>
+                          <div className="space-y-2 border border-solid p-3">
+                            <div className="flex items-center justify-between mb-2">
+                              <span className="text-xs font-medium text-gray-600">
                                 {formatTime(item.dt_txt)}
                               </span>
                               <img
                                 src={`https://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png`}
                                 alt={item.weather[0].description}
-                                className="w-12 h-12"
+                                className="w-10 h-10"
                               />
                             </div>
-                            <div className="text-3xl font-bold text-gray-900">
-                              {Math.round(item.main.temp)}°F
-                            </div>
-                            <div className="text-sm text-gray-600 capitalize">
-                              {item.weather[0].description}
+                            <div className="flex items-baseline gap-2">
+                              <div className="text-xl font-bold text-gray-900">
+                                {Math.round(item.main.temp)}°F
+                              </div>
+                              <div className="text-xs text-gray-600 capitalize leading-tight flex-1">
+                                {item.weather[0].description}
+                              </div>
                             </div>
                             <div className="pt-2 border-t border-gray-200 space-y-1 text-xs text-gray-600">
                               <div className="flex justify-between">
-                                <span>Feels like:</span>
+                                <span>Feels:</span>
                                 <span className="font-medium">
                                   {Math.round(item.main.feels_like)}°F
                                 </span>
                               </div>
                               <div className="flex justify-between">
-                                <span>Humidity:</span>
+                                <span>Humid:</span>
                                 <span className="font-medium">
                                   {item.main.humidity}%
                                 </span>
