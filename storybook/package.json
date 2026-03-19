@@ -1,0 +1,32 @@
+{
+  "name": "forecast4u-storybook",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
+  },
+  "dependencies": {
+    "@carbon/icons-react": "^11.76.0",
+    "@carbon/react": "^1.103.0",
+    "@carbon/styles": "^1.102.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@storybook/addon-essentials": "^8.6.12",
+    "@storybook/addon-interactions": "^8.6.12",
+    "@storybook/addon-links": "^8.6.12",
+    "@storybook/blocks": "^8.6.12",
+    "@storybook/react": "^8.6.12",
+    "@storybook/react-vite": "^8.6.12",
+    "@storybook/test": "^8.6.12",
+    "@types/react": "^18.3.23",
+    "@types/react-dom": "^18.3.7",
+    "@vitejs/plugin-react": "^4.0.0",
+    "sass": "^1.86.0",
+    "storybook": "^8.6.12",
+    "typescript": "^5.9.2",
+    "vite": "^6.3.5"
+  }
+}

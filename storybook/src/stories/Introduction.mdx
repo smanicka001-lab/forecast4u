@@ -1,0 +1,66 @@
+import { Meta } from "@storybook/blocks";
+
+<Meta title="Carbon Design System/Introduction" />
+
+# Forecast4U — Carbon Design System
+
+Welcome to the Forecast4U component library, powered by the **IBM Carbon Design System**.
+
+This Storybook is intended for the **design team** to explore, customize, and reskin Carbon components for production use.
+
+---
+
+## What is Carbon?
+
+[Carbon](https://carbondesignsystem.com/) is IBM's open-source design system. It provides:
+- A comprehensive set of accessible UI components
+- A token-based theming system (colors, spacing, typography)
+- Four built-in themes: **White**, **Gray 10**, **Gray 90**, **Gray 100**
+
+---
+
+## Switching Themes
+
+Use the **Carbon Theme** switcher in the Storybook toolbar (top right, paintbrush icon) to toggle between:
+
+| Theme    | Description              |
+|----------|--------------------------|
+| White    | Default light theme      |
+| Gray 10  | Subtle light gray        |
+| Gray 90  | Dark theme               |
+| Gray 100 | High-contrast dark theme |
+
+---
+
+## Components in This Library
+
+The following Carbon components are used in Forecast4U and are documented here:
+
+| Component       | Story Path                  | Used For                        |
+|-----------------|-----------------------------|---------------------------------|
+| **Button**      | Carbon/Button               | Form submit, Refresh action     |
+| **TextInput**   | Carbon/TextInput            | ZIP code entry                  |
+| **Tile**        | Carbon/Tile                 | Weather forecast cards          |
+| **Loading**     | Carbon/Loading              | Fetching weather data indicator |
+| **Notification**| Carbon/Notification         | Error and status messages       |
+
+---
+
+## Customizing Tokens
+
+To reskin Carbon for production, update the SCSS token overrides. Key tokens for Forecast4U:
+
+```scss
+// Example: Override primary brand color
+$button-primary: #your-brand-color;
+$interactive: #your-brand-color;
+$link-primary: #your-brand-color;
+
+// Override background
+$background: #your-background-color;
+
+// Override text
+$text-primary: #your-text-color;
+```
+
+See the [Carbon theming documentation](https://carbondesignsystem.com/elements/themes/overview/) for the full token reference.
