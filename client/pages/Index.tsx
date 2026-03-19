@@ -1,54 +1,11 @@
 import { useState, useEffect } from "react";
-import { TextInput, Button, Loading, Tile, Toggle } from "@carbon/react";
+import { TextInput, Button, Loading, Tile } from "@carbon/react";
 import { Cloud, Asleep, Light } from "@carbon/icons-react";
-
-interface WeatherData {
-  dt: number;
-  dt_txt: string;
-  main: {
-    temp: number;
-    feels_like: number;
-    temp_min: number;
-    temp_max: number;
-    pressure: number;
-    humidity: number;
-  };
-  weather: Array<{
-    id: number;
-    main: string;
-    description: string;
-    icon: string;
-  }>;
-  clouds: {
-    all: number;
-  };
-  wind: {
-    speed: number;
-    deg: number;
-  };
-  pop: number;
-}
-
-interface ForecastResponse {
-  list: WeatherData[];
-  city: {
-    name: string;
-    country: string;
-    state?: string;
-  };
-}
-
-interface GeocodingResponse {
-  name: string;
-  lat: number;
-  lon: number;
-  country: string;
-  state?: string;
-}
+import { WeatherData, WeatherForecastResponse } from "@shared/api";
 
 export default function Index() {
   const [zipCode, setZipCode] = useState("");
-  const [forecast, setForecast] = useState<ForecastResponse | null>(null);
+  const [forecast, setForecast] = useState<WeatherForecastResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
@@ -72,61 +29,14 @@ export default function Index() {
     setForecast(null);
 
     try {
-      const apiKey = import.meta.env.VITE_OPENWEATHER_API_KEY;
+      const response = await fetch(`/api/weather/forecast?zip=${zipCode}`);
+      const data = await response.json();
 
-      // First, get the coordinates from zip code
-      const zipResponse = await fetch(
-        `https://api.openweathermap.org/geo/1.0/zip?zip=${zipCode},US&appid=${apiKey}`
-      );
-
-      if (!zipResponse.ok) {
-        throw new Error("Failed to fetch location data. Please check the zip code.");
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to fetch weather data.");
       }
 
-      const zipData = await zipResponse.json();
-
-      // Use reverse geocoding to get detailed location info including state
-      const reverseGeoResponse = await fetch(
-        `https://api.openweathermap.org/geo/1.0/reverse?lat=${zipData.lat}&lon=${zipData.lon}&limit=1&appid=${apiKey}`
-      );
-
-      if (!reverseGeoResponse.ok) {
-        throw new Error("Failed to fetch detailed location data.");
-      }
-
-      const reverseGeoData: GeocodingResponse[] = await reverseGeoResponse.json();
-      const locationData = reverseGeoData[0];
-
-      // Get the forecast using coordinates
-      const forecastResponse = await fetch(
-        `https://api.openweathermap.org/data/2.5/forecast?lat=${zipData.lat}&lon=${zipData.lon}&appid=${apiKey}&units=imperial`
-      );
-
-      if (!forecastResponse.ok) {
-        throw new Error("Failed to fetch weather data.");
-      }
-
-      const data: ForecastResponse = await forecastResponse.json();
-
-      // Add state information to the forecast data
-      data.city.state = locationData.state;
-
-      console.log('First forecast time:', data.list[0]?.dt_txt);
-      console.log('Current time:', new Date().toISOString());
-      console.log('Location data with state:', locationData);
-
-      // Log all forecast times in EDT for debugging
-      console.log('All forecast times in EDT:');
-      data.list.slice(0, 10).forEach((item, idx) => {
-        const edtTime = new Date(item.dt_txt).toLocaleString("en-US", {
-          timeZone: "America/New_York",
-          dateStyle: "short",
-          timeStyle: "short"
-        });
-        console.log(`  ${idx}: ${item.dt_txt} UTC → ${edtTime} EDT`);
-      });
-
-      setForecast(data);
+      setForecast(data as WeatherForecastResponse);
       setLastUpdated(new Date());
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
